@@ -1,0 +1,42 @@
+import numpy as np
+
+a = 2
+def lazy_prime_check(p):
+    if (a^(p-1)) % p == 1:
+        return True #isprime
+    return False #then a=2 is known as a Fermat witness for the compositeness of n.
+
+def is_prime(x):
+    for i in range(2, int(np.ceil(np.sqrt(x)))+1, 2):
+        if x % i == 0:
+            return False
+    return True#is prime
+
+def lazy_range(k):
+    '''outputs primes in range [1,k] in booleon form'''
+    my_list = []
+    for i in range(2,k+1):
+        my_list.append(lazy_prime_check(i))
+    return my_list
+
+def prime_range(k):
+    '''outputs primes in range [1,k] in booleon form'''
+    my_list = []
+    for i in range(2,k+1):
+        my_list.append(is_prime(i))
+    return my_list
+    
+def discrepancy(k):
+    wrong_counter = 0
+    lazy_bool = lazy_range(k)
+    prime_bool = prime_range(k)
+    length = len(lazy_bool)
+    if not len(lazy_bool) == len(prime_bool):
+        print('not same length')
+    for i in range(length):
+        if lazy_bool[i] == True and prime_bool[i] == False:
+            wrong_counter += 1
+    return wrong_counter
+
+for i in [1000, 10000, 100000, 1000000]:
+    print('In range {}, there are {} wrong decisions.\nthat makes {}% error rate\n'.format(i, discrepancy(i), 100*discrepancy(i)/i))
